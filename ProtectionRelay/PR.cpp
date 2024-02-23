@@ -179,25 +179,30 @@ public:
 		}
 
 	}
-	void compareVR(double test_volt, double test_current, double test_time)
+	void runVoltRelay(double test_volt,double test_time)
 	{
 
 		if (ovr.getOnoff() && (test_volt >= ovr.getVolt()))
 			if (test_time >= ovr.getTime()) {
 				_runOVR = 1;
-				saveFile(test_volt,test_current, test_time);
+				saveFile(test_volt,0, test_time);
 				operateRelay();
 			}
 		if (uvr.getOnoff() && (uvr.getVolt() >= test_volt))
 			if (test_time >= uvr.getTime()) {
 				_runUVR = 1;
-				saveFile(test_volt, test_current, test_time);
+				saveFile(test_volt, 0, test_time);
 				operateRelay();
 			}
+
+	}
+	void runCurRelay(double test_current, double test_time)
+	{
+
 		if (ocr.getOnoff() && (test_current >= ocr.getCurrent()))
 			if (test_time >= ocr.getTime()) {
 				_runOCR = 1;
-				saveFile(test_volt, test_current, test_time);
+				saveFile(0,test_current, test_time);
 				operateRelay();
 			}
 	}
@@ -368,7 +373,8 @@ int main()
 				cin >> test_time;
 
 				// Run Relay and Write File
-				relay.compareVR(test_volt, test_current, test_time);
+				relay.runVoltRelay(test_volt, test_time);
+				relay.runCurRelay(test_current, test_time);
 			}
 		case 5:	//Quit
 			break;
